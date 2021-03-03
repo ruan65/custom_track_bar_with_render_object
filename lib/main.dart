@@ -1,3 +1,4 @@
+import 'package:custom_widget_with_render_object_seek_bar/track_bar.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,12 +12,14 @@ class App extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(),
         body: Container(
-          color: Colors.red,
+          color: Colors.white,
+          child: TrackBar(
+            barColor: Colors.blue,
+            thumbColor: Colors.red,
+            thumbSize: 20,
+          ),
         ),
-
       ),
     );
   }
 }
-
-
