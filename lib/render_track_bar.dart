@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RenderTrackBar extends RenderBox {
+  static const _minDesiredWidth = 100.0;
   Color _barColor;
   Color _thumbColor;
   double _thumbSize;
@@ -42,4 +43,24 @@ class RenderTrackBar extends RenderBox {
     _thumbSize = value;
     markNeedsLayout();
   }
+
+  @override
+  void performLayout() {
+    final desireWidth = constraints.maxWidth;
+    final desireHeight = thumbSize;
+    final desiredSize = Size(desireWidth, desireHeight);
+    size = constraints.constrain(desiredSize);
+  }
+
+  @override
+  double computeMinIntrinsicWidth(double height) => _minDesiredWidth;
+
+  @override
+  double computeMaxIntrinsicWidth(double height) => _minDesiredWidth;
+
+  @override
+  double computeMinIntrinsicHeight(double width) => thumbSize;
+
+  @override
+  double computeMaxIntrinsicHeight(double width) => thumbSize;
 }

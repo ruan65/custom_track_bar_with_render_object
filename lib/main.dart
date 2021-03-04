@@ -11,12 +11,14 @@ class App extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(),
-        body: Container(
-          color: Colors.white,
-          child: TrackBar(
-            barColor: Colors.blue,
-            thumbColor: Colors.red,
-            thumbSize: 20,
+        body: Center(
+          child: Container(
+            color: Colors.cyan,
+            child: TrackBar(
+              barColor: Colors.blue,
+              thumbColor: Colors.red,
+              thumbSize: 20,
+            ),
           ),
         ),
       ),
