@@ -13,7 +13,7 @@ class App extends StatelessWidget {
         appBar: AppBar(),
         body: Center(
           child: Container(
-            color: Colors.cyan,
+            // color: Colors.cyan,
             child: TrackBar(
               barColor: Colors.blue,
               thumbColor: Colors.red,

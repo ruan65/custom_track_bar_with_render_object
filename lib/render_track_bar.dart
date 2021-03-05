@@ -1,10 +1,25 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class RenderTrackBar extends RenderBox {
   static const _minDesiredWidth = 100.0;
   Color _barColor;
   Color _thumbColor;
   double _thumbSize;
+  double _currentThumbValue = 0.5;
+  HorizontalDragGestureRecognizer _drag;
+
+  @override
+  bool hitTestSelf(Offset position) => true;
+
+  @override
+  void handleEvent(PointerEvent event, BoxHitTestEntry entry) {
+    assert(debugHandleEvent(event, entry));
+    if (event is PointerDownEvent) {
+      _drag.addPointer(event);
+    }
+  }
 
   RenderTrackBar({
     Color barColor,
@@ -12,7 +27,22 @@ class RenderTrackBar extends RenderBox {
     double thumbSize,
   })  : _barColor = barColor,
         _thumbColor = thumbColor,
-        _thumbSize = thumbSize;
+        _thumbSize = thumbSize {
+    _drag = HorizontalDragGestureRecognizer()
+      ..onStart = (DragStartDetails details) {
+        _updateThumbPosition(details.localPosition);
+      }
+      ..onUpdate = (DragUpdateDetails details) {
+        _updateThumbPosition(details.localPosition);
+      };
+  }
+
+  void _updateThumbPosition(Offset localPosition) {
+    var dx = localPosition.dx.clamp(0, size.width);
+    _currentThumbValue = dx / size.width;
+    markNeedsPaint();
+    markNeedsSemanticsUpdate();
+  }
 
   Color get barColor => _thumbColor;
 
@@ -42,6 +72,30 @@ class RenderTrackBar extends RenderBox {
     }
     _thumbSize = value;
     markNeedsLayout();
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    final canvas = context.canvas;
+    canvas.save();
+    canvas.translate(offset.dx, offset.dy);
+
+    // paint bar
+    final barPaint = Paint()
+      ..color = _barColor
+      ..strokeWidth = 5;
+    final point1 = Offset(0, size.height / 2);
+    final point2 = Offset(size.width, size.height / 2);
+    canvas.drawLine(point1, point2, barPaint);
+
+    // draw thumb
+    final thumbPaint = Paint()..color = _thumbColor;
+
+    final thumbDx = _currentThumbValue * size.width;
+    final center = Offset(thumbDx, size.height / 2);
+    canvas.drawCircle(center, _thumbSize / 2, thumbPaint);
+
+    canvas.restore();
   }
 
   @override
